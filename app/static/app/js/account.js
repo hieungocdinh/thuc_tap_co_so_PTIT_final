@@ -64,24 +64,24 @@ var changeAvatarBtn = document.getElementById('change-avatar');
 var personalAvatar = document.getElementById('avatar');
 
 // Change avatar image for account
-chooseFileAvatar.addEventListener('change', function(e) {
+chooseFileAvatar.addEventListener('change', function (e) {
     formAvatarDemo.src = URL.createObjectURL(e.target.files[0]);
 });
 
-changeAvatarBtn.onclick = function(){
+changeAvatarBtn.onclick = function () {
     container.style.display = 'block';
     formAvatarDemo.src = personalAvatar.src;
 };
 
-formAvatarClose.onclick = function(){
-    if(container.style.display == 'block'){
+formAvatarClose.onclick = function () {
+    if (container.style.display == 'block') {
         container.style.display = 'none';
     }
 };
 
 // POST request change avatar image
-formAvatarSubmit.onclick = function(){
-    if(container.style.display == 'block'){
+formAvatarSubmit.onclick = function () {
+    if (container.style.display == 'block') {
         container.style.display = 'none';
         loaddingElement.style.display = 'block';
 
@@ -97,33 +97,33 @@ formAvatarSubmit.onclick = function(){
             },
             body: formData
         })
-        .then(response => response.json())
-        .then(data => {
-            setTimeout(function(){
-                loaddingElement.style.display = 'none';
-            }, 200);
-
-            if(data.success){
-                setTimeout(function(){
-                    location.reload();
+            .then(response => response.json())
+            .then(data => {
+                setTimeout(function () {
+                    loaddingElement.style.display = 'none';
                 }, 200);
-            }else{
-                alert(data.error);
-            }
-        })
-        .catch(error => {
-            loaddingElement.style.display = 'none';
-            alert(error);
-        });
+
+                if (data.success) {
+                    setTimeout(function () {
+                        location.reload();
+                    }, 200);
+                } else {
+                    alert(data.error);
+                }
+            })
+            .catch(error => {
+                loaddingElement.style.display = 'none';
+                alert(error);
+            });
     }
 };
 
 // Add event click to open for forms-group
 addEventFormsGroup();
 
-buttonControls.forEach(function(buttonControl, index) {
-    buttonControl.addEventListener('click', function() {
-        buttonControls.forEach(function(button, i){
+buttonControls.forEach(function (buttonControl, index) {
+    buttonControl.addEventListener('click', function () {
+        buttonControls.forEach(function (button, i) {
             button.classList.remove('active');
             items[i].classList.remove('active');
         });
@@ -136,7 +136,7 @@ buttonControls.forEach(function(buttonControl, index) {
 });
 
 // Open form change personal infomations
-function openFormChange(item){
+function openFormChange(item) {
     var formChange = item.querySelector('.form-change');
     var formGroupBox = item.querySelector('.form__group-box');
 
@@ -147,15 +147,15 @@ function openFormChange(item){
 }
 
 // Close form change personal infomations
-function closeFormChange(item){
+function closeFormChange(item) {
     var formChange = item.querySelector('.form-change');
     var formGroupBox = item.querySelector('.form__group-box');
 
     item.querySelector('i').style.transform = 'translateY(-50%)';
     formChange.style.animation = 'close 0.3s ease forwards';
     formGroupBox.style.marginBottom = '0px';
-    setTimeout(function(){
-        formChange.querySelectorAll('input').forEach(function(item){
+    setTimeout(function () {
+        formChange.querySelectorAll('input').forEach(function (item) {
             item.value = '';
         })
         formChange.style.display = 'none';
@@ -163,9 +163,9 @@ function closeFormChange(item){
 }
 
 // Close all form change
-function closeAllFormChange(formsGroup, index){
-    formsGroup.forEach(function(item, i){
-        if (i != index){
+function closeAllFormChange(formsGroup, index) {
+    formsGroup.forEach(function (item, i) {
+        if (i != index) {
             closeFormChange(item);
             item.querySelector('.form-change').style.display = 'none';
         }
@@ -173,26 +173,26 @@ function closeAllFormChange(formsGroup, index){
 }
 
 // Add animation when open/close form-group
-function addEventFormsGroup(){
+function addEventFormsGroup() {
     var formsGroup = document.querySelectorAll('.personal .wrapper.active .form__group');
     var formsGroupBox = document.querySelectorAll('.personal .wrapper.active .form__group-box');
 
-    formsGroup.forEach(function(item, index){
-        formsGroupBox[index].addEventListener('click', function(){
-            if(formsGroupBox[index].disabled == true)
+    formsGroup.forEach(function (item, index) {
+        formsGroupBox[index].addEventListener('click', function () {
+            if (formsGroupBox[index].disabled == true)
                 return;
 
             formsGroupBox[index].disabled = true;
-            setTimeout(function(){
+            setTimeout(function () {
                 formsGroupBox[index].disabled = false;
             }, 320);
 
             let isOpen = item.querySelector('.form__group-box').style.marginBottom !== '0px';   // default = false
 
-            if(isOpen){
+            if (isOpen) {
                 isOpen = false;
                 closeFormChange(item);
-            }else{
+            } else {
                 isOpen = true;
                 closeAllFormChange(formsGroup, index);
                 openFormChange(item);
@@ -212,45 +212,29 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 'X-CSRFToken': csrftoken
             },
         })
-        .then(response => response.json())
-        .then(data => {
-            userId = data.id;
-        })
-        .catch(error => {
-            alert(error);
-        })
+            .then(response => response.json())
+            .then(data => {
+                userId = data.id;
+            })
+            .catch(error => {
+                alert(error);
+            })
     }
 });
 
 // Change and update user informations
-var formsChange = document.querySelectorAll('.personal .details .details__info .form-change');
-var formAccount = document.querySelector('.personal .form-account')
-var formLayerAccount = formAccount.querySelector('.form__layer');
-const formVerifyEmail = `
-    <form action="" method="POST" class="form__verify">
-        <h4 class="form__verify-heading">Nhập mã xác thực được gửi tới email của bạn</h4>
-        <p class="form__verify-noti">Nếu bạn không thấy email xác nhận trong hòm thư của mình, 
-            hãy thử kiểm tra mục thư spam hoặc kiểm tra lại tên email đã nhập đúng chưa và thử lại.
-        </p>
+var formsChange = document.querySelectorAll('.personal .details .form-change');
 
-        <input type="text" name="verify_code" class="form__verify-input" placeholder="Nhập mã xác nhận gồm 6 chữ số">
-        <div class="form__verify-wrapper">
-            <button type="button" class="form__verify-cancel">Quay lại</button>
-            <button type="button" class="form__verify-submit">Xác nhận</button>
-        </div>
-    </form>
-`;
 
-// Function to change and update user informations: fullname, username, email, phone number
-formsChange.forEach(function(formChange){
+// Function to change and update user informations: fullname, username, phone number
+formsChange.forEach(function (formChange) {
     var inputElement = formChange.querySelector('.form__body-input');
     var buttonChange = formChange.querySelector('.form__body-submit');
 
-    buttonChange.addEventListener('click', function(){
+    buttonChange.addEventListener('click', function () {
         var data = inputElement.value;
-        let isEmail = inputElement.name == 'email';
 
-        if (data.trim() !== ''){
+        if (data.trim() !== '') {
             loaddingElement.style.display = 'block';
 
             fetch('/api/update-account/', {
@@ -264,244 +248,29 @@ formsChange.forEach(function(formChange){
                     userId: userId,
                 })
             })
-            .then(response => response.json())
-            .then(data => {
-                setTimeout(function(){
-                    loaddingElement.style.display = 'none';
-                }, 200);
+                .then(response => response.json())
+                .then(data => {
+                    setTimeout(function () {
+                        loaddingElement.style.display = 'none';
+                    }, 200);
 
-                if(data.success){
-                    if(isEmail){
-                        verifyChangeEmail();
-                    }else{
-                        setTimeout(function(){
+                    if (data.success) {
+                        setTimeout(function () {
                             location.reload();
                         }, 200);
+                    } else {
+                        alert(data.error);
                     }
-                }else{
-                    alert(data.error);
-                }
-            })
-            .catch(error => {
-                loaddingElement.style.display = 'none';
-                alert(error);
-            })
+                })
+                .catch(error => {
+                    loaddingElement.style.display = 'none';
+                    alert(error);
+                })
         }
     });
 })
 
-// Authenticate when the user wants to change the account email
-function verifyChangeEmail(){
-    formAccount.style.display = 'block';
-    formLayerAccount.innerHTML = formVerifyEmail;
-    var formInputEmail = formLayerAccount.querySelector('.form__verify-input');
-    var formAccountSubmit = formLayerAccount.querySelector('.form__verify-submit');
-    var formAccountCancel = formLayerAccount.querySelector('.form__verify-cancel');
-    var formAccountClose = formAccount.querySelector('.form__close-btn');
 
-    formAccountClose.addEventListener('click', function(){
-        formAccount.style.display = 'none';
-    })
 
-    // POST request verify new email
-    formAccountSubmit.addEventListener('click', function(){
-        loaddingElement.style.display = 'block';
-        let data = formInputEmail.value
 
-        fetch('/api/verify-change-email/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrftoken
-            },
-            body: JSON.stringify({
-                verify_code: data,
-                userId: userId
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            setTimeout(function(){
-                loaddingElement.style.display = 'none';
-            }, 200);
-
-            if(data.success){
-                setTimeout(function(){
-                    location.reload();
-                    alert(data.success);
-                }, 200);
-            }else{
-                alert(data.error);
-            }
-        })
-        .catch(error => {
-            loaddingElement.style.display = 'none';
-            alert(error);
-        })
-    })
-
-    formAccountCancel.addEventListener('click', function(){
-        formAccount.style.display = 'none';
-        formLayerAccount.innerHTML = '';
-    })
-}
-
-// Change account password
-var formChangePassword = document.querySelector('.personal .details .form-change-password');
-var formGroupBoxPassword = formChangePassword.parentElement.querySelector('.form__group-box');
-var formChangePasswordInput = formChangePassword.querySelectorAll('input');
-var submitPassword = formChangePassword.querySelector('.form__body-submit');
-
-// Validator data in form change password
-function validate(item, message = 'Trường này là bắt buộc'){
-    let value = item.value.trim();
-    if(value.length >= 8){
-        item.classList.remove('invalid');
-        item.previousElementSibling.innerHTML = message;
-        item.previousElementSibling.style.display = 'none';
-        openFormChange(formChangePassword.parentNode);
-        return false;
-    }else{
-        item.previousElementSibling.innerHTML = 'Trường này là bắt buộc.';
-        if(value !== ''){
-            item.previousElementSibling.innerHTML = message;
-        }
-        item.classList.add('invalid');
-        item.previousElementSibling.style.display = 'block';
-        openFormChange(formChangePassword.parentNode);
-        return true;
-    }
-}
-
-// Clear data in form change when user close form
-formGroupBoxPassword.addEventListener('click', function(){
-    clearFormChangePass();
-    clearFormRecoverPass();
-})
-
-function clearFormChangePass(){
-    formChangePasswordInput.forEach(function(item){
-        item.classList.remove('invalid');
-        item.previousElementSibling.innerHTML = 'Trường này là bắt buộc';
-        item.previousElementSibling.style.display = 'none';
-    });
-}
-
-formChangePasswordInput.forEach(function(item){
-    item.onblur = function(){
-        validate(item, 'Vui lòng nhập tối thiểu 8 kí tự.');
-    }
-
-    item.oninput = function(){
-        validate(item, 'Vui lòng nhập tối thiểu 8 kí tự.');
-    }
-});
-
-// POST request to change password
-submitPassword.addEventListener('click', function(){
-    let isValid = false;
-    formChangePasswordInput.forEach(function(item){
-        isValid = validate(item, 'Vui lòng nhập tối thiểu 8 kí tự.');
-    });
-
-    if(!isValid){
-        loaddingElement.style.display = 'block';
-        let dataPassword = {userId: userId};
-
-        formChangePasswordInput.forEach(function(item){
-            dataPassword[item.name] = item.value.trim();
-        });
-
-        fetch('/api/change-password/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrftoken
-            },
-            body: JSON.stringify(dataPassword)
-        })
-        .then(response => response.json())
-        .then(data => {
-            loaddingElement.style.display = 'none';
-
-            if(data.success){
-                alert('Mật khẩu của bạn đã được thay đổi, vui lòng đăng nhập lại.');
-                loggedOut();
-            }else{
-                alert(data.error);
-            }
-        })
-        .catch(error => {
-            loaddingElement.style.display = 'none';
-            alert(error);
-        })
-    }
-});
-
-// Log out account when change password success
-function loggedOut(){
-    fetch('/logout/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrftoken
-        },
-    })
-    .then(response => response.json())
-    .then(data => {
-        localStorage.setItem('isLoggedIn', 'false');
-        window.location.href = '/';
-    })
-    .catch((error) => {
-        alert(error);
-    });
-}
-
-var formRecoverPassword = document.querySelector('.personal .details .form-forgot-password');
-var formGroupBoxRecoverPass = formRecoverPassword.parentElement.querySelector('.form__group-box');
-var emailRecover = formRecoverPassword.querySelector('input[name="email-recover"]');
-var submitEmailRecover = formRecoverPassword.querySelector('.form__body-submit');
-var errorMessage1 = formRecoverPassword.querySelector('.error-message');
-
-// Clear data in form change when user close form
-function clearFormRecoverPass(){
-    emailRecover.classList.remove('invalid');
-    emailRecover.previousElementSibling.innerHTML = 'Trường này là bắt buộc';
-    emailRecover.previousElementSibling.style.display = 'none';
-}
-
-formGroupBoxRecoverPass.addEventListener('click', function(){
-    clearFormRecoverPass();
-    clearFormChangePass();
-})
-
-// Validator email in form recover password
-function checkEmailRecoverPassword(email, message = 'Trường này là bắt buộc.'){
-    let re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-    
-    if(re.test(email)){
-        emailRecover.classList.remove('invalid');
-        errorMessage1.style.display = 'none';
-        errorMessage1.innerHTML = '';
-        openFormChange(formRecoverPassword.parentNode);
-        return true;
-    }else{
-        errorMessage1.innerHTML = 'Trường này là bắt buộc.';
-        if(email !== ''){
-            errorMessage1.innerHTML = message;
-        }
-        emailRecover.classList.add('invalid');
-        errorMessage1.style.display = 'block';
-        openFormChange(formRecoverPassword.parentNode);
-        return false;
-    }
-}
-
-emailRecover.onblur = function(){
-    checkEmailRecoverPassword(emailRecover.value.trim(), 'Vui lòng nhập email đã đăng ký tài khoản này.');
-}
-
-emailRecover.oninput = function(){
-    checkEmailRecoverPassword(emailRecover.value.trim(), 'Vui lòng nhập email đã đăng ký tài khoản này.');
-}
 

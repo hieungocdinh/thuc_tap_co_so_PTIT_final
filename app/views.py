@@ -99,7 +99,7 @@ def payment(request):
         items = []
         cart = {'getCartItemsAmount': 0}
         order = {'get_cart_items':0, 'get_cart_total':0}
-    context = {'cart': cart, 'order': order, 'items': items}
+    context = {'cart': cart, 'order': order, 'items': items, 'customer':customer}
     return render(request, 'app/payment.html', context)
 
 # Load informations of customer orders
@@ -394,6 +394,11 @@ def updateAccount(request):
                 setattr(user.profile, 'fullname', data['fullname'])
                 user.profile.save()
                 return JsonResponse({'success': 'Tên của bạn đã được cập nhật.'})
+            
+            elif 'new-address' in data:
+                setattr(user.profile, 'address', data['new-address'])
+                user.profile.save()
+                return JsonResponse({'success': 'Địa chỉ của bạn đã được cập nhật.'})
 
             elif 'phone-number' in data:
                 if len(data['phone-number']) == 10 and data['phone-number'].isdigit():
@@ -402,41 +407,6 @@ def updateAccount(request):
                     return JsonResponse({'success': 'Số điện thoại đã được cập nhật.'})
                 else:
                     return JsonResponse({'error': 'Số điện thoại chưa đúng định dạng (chỉ gồm 10 kí tự số).'})
-
-            elif 'email' in data:
-                if user.email == data['email']:
-                    return JsonResponse({'error': 'Email này trùng với email hiện tại của bạn, vui lòng sử dụng một email khác'})
-
-                if User.objects.filter(email=data['email']).exists():
-                    return JsonResponse({'error': 'Email này đã được đăng ký cho một tài khoản khác, vui lòng sử dụng một email khác.'})
-                
-                verifyCode = ''.join(random.choices('0123456789', k=6))
-                senderEmail = 'dcthoai1023@gmail.com'
-                senderPassword = ''
-                receiverEmail = data['email']
-
-                message = MIMEMultipart()
-                message['From'] = ''
-                message['To'] = receiverEmail
-                message['Subject'] = 'Mã xác thực tài khoản của bạn'
-
-                content = f'Nhập mã này để hoàn tất quá trình thay đổi email cho tài khoản của bạn: {verifyCode}. Mã này có hiệu lực trong vòng 3 phút.'
-                message.attach(MIMEText(content, 'plain'))
-
-                session = smtplib.SMTP('smtp.gmail.com', 587)  # Used gmail with port 587
-                session.starttls()
-                session.login(senderEmail, senderPassword)
-                session.sendmail(senderEmail, receiverEmail, message.as_string())
-                session.quit()
-
-                # Save the user data and verification code in session
-                request.session['user_email'] = data['email']
-                request.session['verify_code'] = verifyCode
-                request.session['code_time'] = datetime.datetime.now().timestamp()
-
-                return JsonResponse({'success': 'Mã xác thực đã được gửi đi, vui lòng kiểm tra email. Mã này có hiệu lực trong vòng 3 phút.'}, status=200)
-            else:
-                return JsonResponse({'error': 'Dữ liệu không hợp lệ.'})
         except User.DoesNotExist:
             return JsonResponse({'error': 'Tài khoản không tồn tại.'})
     else:
