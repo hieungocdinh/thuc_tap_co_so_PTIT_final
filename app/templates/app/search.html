@@ -20,7 +20,10 @@
                             <div class="product__img" style="background-image: url({{product.imageURL}});"></div>
                             <div class="product__info">
                                 <h4 class="info__name">{{product.name}}</h4>
-                                <h4 class="info__price"><del>{{product.cost}}đ</del>  {{product.price}}đ</h4>
+                                <h4 class="info__price">
+                                {% if product.cost != 0 %}<del>{{product.cost}} đ</del>{% endif %}
+                                {{product.price}}đ
+                                </h4>
                             </div>
                         </a>
 

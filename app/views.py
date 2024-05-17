@@ -421,33 +421,6 @@ def getIdUser(request):
     else:
         return JsonResponse({'error': 'Gửi yêu cầu thất bại, vui lòng thử lại sau.'})
 
-def verifyChangeEmail(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        if 'verify_code' in request.session and data['verify_code'] == request.session['verify_code']:
-            # Check if the code has expired
-            if datetime.datetime.now().timestamp() - request.session['code_time'] > EXPIRATION_TIME:
-                del request.session['email']
-                del request.session['verify_code']
-                del request.session['code_time']
-                return JsonResponse({'error': 'Mã xác thực hết hiệu lực.'}, status=400)
-
-            userEmail = request.session['user_email']
-            user = User.objects.get(id=data['userId'])
-            user.email = userEmail
-            user.save()
-
-            # Delete the user data and verification code from session
-            del request.session['user_email']
-            del request.session['verify_code']
-            del request.session['code_time']
-
-            return JsonResponse({'success': 'Email đã được cập nhật thành công.'}, status=201)
-        else:
-            return JsonResponse({'error': 'Mã xác thực không hợp lệ.'}, status=400)
-    else:
-        return JsonResponse({'error': 'Gửi yêu cầu thất bại, vui lòng thử lại sau.'}, status=400)
-
 @api_view(['POST'])
 def updateAvatar(request):
     if request.method == 'POST':
@@ -468,23 +441,6 @@ def updateAvatar(request):
             return Response({'error': 'Không tìm thấy file.'}, status=status.HTTP_400_BAD_REQUEST)
     else:
         return JsonResponse({'error': 'Gửi yêu cầu thất bại, vui lòng thử lại sau.'}, status=400)
-
-def changePassword(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        user = User.objects.get(id=data['userId'])
-
-        if check_password(data['password'], user.password):
-            if(data['new-password'] == data['password']):
-                return JsonResponse({'error': 'Mật khẩu này trùng với mật khẩu cũ, vui lòng sử dụng mật khẩu khác.'})
-            else:
-                user.set_password(data['new-password'])
-                user.save()
-                return JsonResponse({'success': 'Thay đổi mật khẩu thành công.'})
-        else:
-            return JsonResponse({'error': 'Mật khẩu cũ không đúng, vui lòng nhập lại.'})
-    else:
-        return JsonResponse({'error': 'Gửi yêu cầu thất bại, vui lòng thử lại sau.'})
 
 def sendFeedback(request):
     if request.method == 'POST':
