@@ -6,11 +6,11 @@ var prevSlideBtn = document.querySelector('.slider .prev-slide');
 var intervalId, timeoutId, firstSlide, lastSlide, sliderLinksItem, widthSliderItem, minIndex, currentIndex;
 
 // Displays the current slide
-function showSlide(index, isTransition){
-    if(isTransition){
+function showSlide(index, isTransition) {
+    if (isTransition) {
         sliderControl.offsetHeight;
         sliderControl.style.transition = 'all 500ms ease 0s';
-    }else{
+    } else {
         sliderControl.offsetHeight;
         sliderControl.style.transition = 'all 0ms ease 0s';
     }
@@ -20,80 +20,80 @@ function showSlide(index, isTransition){
 }
 
 // Move to the next slide
-function nextSlide(){
-    if(currentIndex - widthSliderItem == minIndex){
+function nextSlide() {
+    if (currentIndex - widthSliderItem == minIndex) {
         showSlide(currentIndex - widthSliderItem, true);
         currentIndex = -widthSliderItem;
-        setTimeout(function(){
+        setTimeout(function () {
             showSlide(-widthSliderItem, false);
         }, 500);
-    }else{
+    } else {
         showSlide(currentIndex - widthSliderItem, true);
         currentIndex -= widthSliderItem;
     }
 }
 
 // Go to previous slide
-function prevSlide(){
-    if(currentIndex + widthSliderItem == 0){
+function prevSlide() {
+    if (currentIndex + widthSliderItem == 0) {
         showSlide(0, true);
         currentIndex = minIndex + widthSliderItem;
-        setTimeout(function(){
+        setTimeout(function () {
             showSlide(currentIndex, false);
         }, 500);
-    }else{
+    } else {
         showSlide(currentIndex + widthSliderItem, true);
         currentIndex += widthSliderItem;
     }
 }
 
 // Start animation slider
-function startSlider(){
+function startSlider() {
     intervalId = setInterval(nextSlide, 4000);
 }
 
 // Add event Move to the next slide when click next button
-nextSlideBtn.addEventListener('click', function() {
-    if(nextSlideBtn.disabled)
+nextSlideBtn.addEventListener('click', function () {
+    if (nextSlideBtn.disabled)
         return;
     nextSlideBtn.disabled = true;
-    setTimeout(function(){
+    setTimeout(function () {
         nextSlideBtn.disabled = false;
     }, 500);
     clearInterval(intervalId);
     clearTimeout(timeoutId);
     nextSlide();
-    timeoutId = setTimeout(function(){
+    timeoutId = setTimeout(function () {
         startSlider();
     }, 3000);
 });
 
 // Add event Go to previous slide when click pre button
-prevSlideBtn.addEventListener('click', function() {
-    if(prevSlideBtn.disabled)
+prevSlideBtn.addEventListener('click', function () {
+    if (prevSlideBtn.disabled)
         return;
     prevSlideBtn.disabled = true;
-    setTimeout(function(){
+    setTimeout(function () {
         prevSlideBtn.disabled = false;
     }, 500);
     clearInterval(intervalId);
     clearTimeout(timeoutId);
     prevSlide();
-    timeoutId = setTimeout(function(){
+    timeoutId = setTimeout(function () {
         startSlider();
     }, 3000);
 });
 
 // Create an auto-scroll effect for the slide
-function sliderScroll(){
+function sliderScroll() {
     // Clone the first and last slide
     firstSlide = sliderLinks[0].cloneNode(true);
     lastSlide = sliderLinks[sliderLinks.length - 1].cloneNode(true);
-    
+
     // Add the cloned slides to the beginning and end of the slider
     sliderControl.insertBefore(lastSlide, sliderControl.firstChild);
     sliderControl.appendChild(firstSlide);
-    
+
     // Update the list of slides
     sliderLinks = slider.querySelectorAll('.slider__link');
     sliderLinksItem = slider.querySelectorAll('.slider__link-item');
@@ -101,7 +101,7 @@ function sliderScroll(){
     minIndex = -((sliderLinks.length - 1) * widthSliderItem);
     currentIndex = -widthSliderItem;
 
-    sliderLinksItem.forEach(function(item){
+    sliderLinksItem.forEach(function (item) {
         item.style.width = `${widthSliderItem}px`;
     })
 
@@ -110,39 +110,39 @@ function sliderScroll(){
 }
 
 // Automatically scroll slides when the web page loaded
-document.addEventListener('DOMContentLoaded', function(){
+document.addEventListener('DOMContentLoaded', function () {
     sliderScroll();
 });
 
 // Automatically update slide size when screen size changes
-window.addEventListener('resize', function(){
+window.addEventListener('resize', function () {
     widthSliderItem = slider.offsetWidth;
     minIndex = -((sliderLinks.length - 1) * widthSliderItem);
     currentIndex = -widthSliderItem;
 
-    sliderLinksItem.forEach(function(item){
+    sliderLinksItem.forEach(function (item) {
         item.style.width = `${widthSliderItem}px`;
     })
 })
 
 // Listen for the user's swipe events on the slider
-function addSwipe(){
+function addSwipe() {
     var hammertime = new Hammer(document.querySelector('.slider .slider__content .wrapper'));
     var nextSlideBtn = document.querySelector('.slider .next-slide');
     var prevSlideBtn = document.querySelector('.slider .prev-slide');
     var clientWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 
-    if(clientWidth < 740){
-        if(hammertime){
-            hammertime.on('swiperight', function(e){
+    if (clientWidth < 740) {
+        if (hammertime) {
+            hammertime.on('swiperight', function (e) {
                 prevSlideBtn.click();
             });
-                
-            hammertime.on('swipeleft', function(e){
+
+            hammertime.on('swipeleft', function (e) {
                 nextSlideBtn.click();
             });
         }
-    }else{
+    } else {
         hammertime.off('swiperight');
         hammertime.off('swipeleft');
     }
@@ -153,17 +153,17 @@ addSwipe();
 // Load product
 var start = 1;
 var content = document.querySelector('.content .wrapper');
-var moreBook = document.getElementById('more-product-btn');
+var moreProduct = document.getElementById('more-product-btn');
 
 // Showing 18 products when the web page finishes loading
 function fetchProducts() {
     fetch(`/api/products?start=${start}`)
-    .then(response => response.json())
-    .then(products => {
-        if (products.length === 0){
-            return;
-        }
-        let productHTML = products.map(product => `
+        .then(response => response.json())
+        .then(products => {
+            if (products.length === 0) {
+                return;
+            }
+            let productHTML = products.map(product => `
             <div class="product">
                 <a href="/product/${product.slugName}" class="product__link">
                     <div class="product__img" style="background-image: url(${product.imageURL});"></div>
@@ -177,16 +177,16 @@ function fetchProducts() {
             </div>
         `).join('');
 
-        content.innerHTML += productHTML;
-        addUpdateCartItemListener();
-        start += 1;
-    });
+            content.innerHTML += productHTML;
+            addUpdateCartItemListener();
+            start += 1;
+        });
 }
 
 fetchProducts();
 
 // Display 18 more products when clicking the see more button
-moreBook.onclick = function(){
+moreProduct.onclick = function () {
     fetchProducts();
 }
 
@@ -195,13 +195,13 @@ var filter = document.getElementById('filter-btn');
 
 function fetchProductsByCategory(category) {
     fetch(`/filter-category?category=${category}`)
-    .then(response => response.json())
-    .then(products => {
-        if (products.length === 0){
-            content.innerHTML = '';
-            return;
-        }
-        let productHTML = products.map(product => `
+        .then(response => response.json())
+        .then(products => {
+            if (products.length === 0) {
+                content.innerHTML = '';
+                return;
+            }
+            let productHTML = products.map(product => `
             <div class="product">
                 <a href="/product/${product.slugName}" class="product__link">
                     <div class="product__img" style="background-image: url(${product.imageURL});"></div>
@@ -214,17 +214,17 @@ function fetchProductsByCategory(category) {
             </div>
         `).join('');
 
-        content.innerHTML = '';
-        content.innerHTML += productHTML;
-    });
+            content.innerHTML = '';
+            content.innerHTML += productHTML;
+        });
 }
 
-filter.onclick = function() {
+filter.onclick = function () {
     var select = document.querySelector('.filter-category option:checked');
 
-    if(select.value == 'default') {
+    if (select.value == 'default') {
         window.location.href = '/';
-    }else{
+    } else {
         category = select.value;
         document.getElementById('more-product-btn').style.display = 'none';
         document.querySelector('.content__heading').textContent = select.textContent;

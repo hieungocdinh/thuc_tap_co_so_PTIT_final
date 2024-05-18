@@ -71,11 +71,7 @@
                         </div>
                     </div>
                 </div>
-            
-                <div class="nav__support pc tablet">
-                    <a href="" class="nav__support-link">Hỗ trợ</a>
-                </div>
-            
+                
                 <div class="nav__cart pc tablet">
                     <a href="{% url 'cart' %}" class="nav__cart-link">
                         <i class="fa-solid fa-cart-shopping"><div class="nav__cart-quantity">{{cart.getCartItemsAmount}}</div></i>
@@ -185,6 +181,5 @@
     {% endblock footer %}
     
     <script src="{% static 'app/js/res.js' %}"></script>
-    <script src="{% static 'app/js/feedback.js' %}"></script>
 </body>
 </html>

@@ -16,15 +16,15 @@
         <div class="payment__info">
             <div class="wrapper">
                 <span>Họ và tên</span>
-                <input name="payment-name" type="text" class="info__input"  value="{% if customer.profile.fullname %}{{ customer.profile.fullname }}{% endif %}" placeholder="Nhập họ tên người nhận">
+                <input name="payment-name" type="text" class="info__input"  value="{% if customer.profile.fullname != 'user' %}{{ customer.profile.fullname }}{% endif %}" placeholder="Nhập họ tên người nhận">
             </div>
             <div class="wrapper">
                 <span>Số điện thoại</span>
-                <input name="payment-phone" type="text" class="info__input" value="{% if customer.profile.phoneNumber %}{{ customer.profile.phoneNumber }}{% endif %}" placeholder="Nhập số điện thoại người nhận">
+                <input name="payment-phone" type="text" class="info__input" value="{% if customer.profile.phoneNumber != 'Chưa có' %}{{ customer.profile.phoneNumber }}{% endif %}" placeholder="Nhập số điện thoại người nhận">
             </div>
             <div class="wrapper">
                 <span>Địa chỉ</span>
-                <input name="payment-address" type="text" class="info__input" value="{% if customer.profile.address %}{{ customer.profile.address }}{% endif %}" placeholder="Nhập địa chỉ người nhận">
+                <input name="payment-address" type="text" class="info__input" value="{% if customer.profile.address != 'Chưa có' %}{{ customer.profile.address }}{% endif %}" placeholder="Nhập địa chỉ người nhận">
             </div>
         </div>
 
